@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Yarn Dev Core API",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["dev"],
+      "options": {
+        "cwd": "../core-api"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Run NextJs development server",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["dev"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Storybook",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["storybook"],
+      "problemMatcher": []
+    }
+  ]
+}
