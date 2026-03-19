@@ -15,4 +15,4 @@ export const STATUS_CODES = {
     OK: 200,
     RESET_CONTENT: 205,
   },
-};
+} as const;

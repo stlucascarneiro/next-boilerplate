@@ -1,4 +1,5 @@
 import Chip from "@/shared/Chip.client";
+import { COLORS } from "@/shared/constants/colors.data";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, fn } from "storybook/test";
 
@@ -25,30 +26,7 @@ const meta = {
     color: {
       control: { type: "select" },
       description: "Visual color token applied to the chip.",
-      options: [
-        "amber",
-        "blue",
-        "cyan",
-        "emerald",
-        "fuchsia",
-        "gray",
-        "green",
-        "indigo",
-        "lime",
-        "neutral",
-        "orange",
-        "pink",
-        "purple",
-        "red",
-        "rose",
-        "sky",
-        "slate",
-        "stone",
-        "teal",
-        "violet",
-        "yellow",
-        "zinc",
-      ],
+      options: COLORS,
       table: {
         defaultValue: { summary: "neutral" },
       },
@@ -79,19 +57,19 @@ export const Default: Story = {
   args: {
     children: "Chip text",
   },
-  play: async ({ canvas }) => {
-    const chipText = canvas.getByText(/chip text/i);
-    const chipElement = chipText.closest("div");
-
-    await expect(chipElement).not.toBeNull();
-    await expect(chipElement?.querySelector("svg")).toBeNull();
-  },
   parameters: {
     docs: {
       description: {
         story: "Static chip for non-interactive labels.",
       },
     },
+  },
+  play: async ({ canvas }) => {
+    const chipText = canvas.getByText(/chip text/i);
+    const chipElement = chipText.closest("div");
+
+    await expect(chipElement).not.toBeNull();
+    await expect(chipElement?.querySelector("svg")).toBeNull();
   },
 };
 
@@ -101,6 +79,14 @@ export const Clickable: Story = {
     clickable: true,
     onClick: fn(),
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Interactive chip variant that displays a dismiss icon and supports click handling.",
+      },
+    },
+  },
   play: async ({ args, canvas, userEvent }) => {
     const chipText = canvas.getByText(/clickable chip/i);
     const chipElement = chipText.closest("div");
@@ -109,13 +95,5 @@ export const Clickable: Story = {
     await expect(chipElement?.querySelector("svg")).not.toBeNull();
     await userEvent.click(chipText);
     await expect(args.onClick).toHaveBeenCalledTimes(1);
-  },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Interactive chip variant that displays a dismiss icon and supports click handling.",
-      },
-    },
   },
 };
