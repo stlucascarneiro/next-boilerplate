@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { expect } from "storybook/test";
 import Select from "../../shared/Select.client";
 
 type SelectStoryArgs = {
@@ -79,6 +80,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const select = canvas.getByRole("combobox");
+
+    await userEvent.selectOptions(select, "ca");
+    await expect(select).toHaveValue("ca");
+  },
   parameters: {
     docs: {
       source: {
@@ -100,6 +107,13 @@ export const WithoutLabel: Story = {
       { label: "Portuguese", value: "pt" },
       { label: "Spanish", value: "es" },
     ],
+  },
+  play: async ({ canvas, userEvent }) => {
+    const select = canvas.getByRole("combobox");
+
+    await expect(canvas.queryByText(/language/i)).toBeNull();
+    await userEvent.selectOptions(select, "pt");
+    await expect(select).toHaveValue("pt");
   },
   parameters: {
     docs: {
@@ -125,6 +139,12 @@ export const NumericValues: Story = {
       { label: "Medium", value: 2 },
       { label: "High", value: 3 },
     ],
+  },
+  play: async ({ canvas, userEvent }) => {
+    const select = canvas.getByRole("combobox");
+
+    await userEvent.selectOptions(select, "3");
+    await expect(select).toHaveValue("3");
   },
   parameters: {
     docs: {

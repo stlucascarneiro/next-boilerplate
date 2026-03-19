@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { FiChevronDown, FiSettings, FiUser } from "react-icons/fi";
+import { expect, waitFor } from "storybook/test";
 import { Dropdown } from "../../shared/Dropdown.client";
 
 type DropdownStoryArgs = {
@@ -77,6 +78,25 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {},
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole("button", { name: /open menu/i });
+
+    await expect(
+      canvas.queryByRole("button", { name: /edit profile/i }),
+    ).toBeNull();
+
+    await userEvent.click(trigger);
+    await expect(
+      canvas.getByRole("button", { name: /edit profile/i }),
+    ).toBeInTheDocument();
+
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(
+        canvas.queryByRole("button", { name: /edit profile/i }),
+      ).toBeNull();
+    });
+  },
   parameters: {
     docs: {
       source: {
@@ -89,6 +109,21 @@ export const Default: Story = {
 export const LeftAligned: Story = {
   args: {
     placement: "left",
+  },
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole("button", { name: /open menu/i });
+
+    await userEvent.click(trigger);
+    await expect(
+      canvas.getByRole("button", { name: /account settings/i }),
+    ).toBeInTheDocument();
+
+    await userEvent.click(document.body);
+    await waitFor(() => {
+      expect(
+        canvas.queryByRole("button", { name: /account settings/i }),
+      ).toBeNull();
+    });
   },
   parameters: {
     docs: {

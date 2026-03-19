@@ -4,6 +4,7 @@ import ToastProvider, {
   useToast,
 } from "@/shared/Toast.client";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { expect, waitFor } from "storybook/test";
 
 type ToastStoryArgs = {
   position?: ToastPosition;
@@ -155,6 +156,19 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /^success$/i }));
+
+    await expect(canvas.getByRole("alert")).toBeInTheDocument();
+    await expect(
+      canvas.getByText(/changes saved successfully\./i),
+    ).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: /close toast/i }));
+    await waitFor(() => {
+      expect(canvas.queryByRole("alert")).toBeNull();
+    });
+  },
   parameters: {
     docs: {
       description: {
@@ -172,6 +186,14 @@ export const BottomRight: Story = {
   args: {
     position: "bottom-right",
   },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /^error$/i }));
+
+    await expect(canvas.getByRole("alert")).toBeInTheDocument();
+    await expect(
+      canvas.getByText(/something went wrong\. please try again\./i),
+    ).toBeInTheDocument();
+  },
   parameters: {
     docs: {
       description: {
@@ -187,6 +209,14 @@ export const BottomRight: Story = {
 export const BottomCenter: Story = {
   args: {
     position: "bottom-center",
+  },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /^success$/i }));
+    await userEvent.click(canvas.getByRole("button", { name: /^info$/i }));
+    await userEvent.click(canvas.getByRole("button", { name: /^warning$/i }));
+    await userEvent.click(canvas.getByRole("button", { name: /^error$/i }));
+
+    await expect(canvas.getAllByRole("alert")).toHaveLength(3);
   },
   parameters: {
     docs: {

@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { FiSettings } from "react-icons/fi";
-import { fn } from "storybook/test";
+import { expect, fn } from "storybook/test";
 import Button from "../../shared/Button.client";
 import Header from "../../shared/Header.client";
+
+const mockBack = fn();
+const mockPush = fn();
 
 type HeaderStoryArgs = {
   returnPath?: string;
@@ -89,8 +92,8 @@ const meta = {
     nextjs: {
       appDirectory: true,
       navigation: {
-        back: fn(),
-        push: fn(),
+        back: mockBack,
+        push: mockPush,
       },
     },
   },
@@ -103,6 +106,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const returnButton = canvas.getByRole("button");
+
+    await expect(returnButton).toBeVisible();
+    await userEvent.click(returnButton);
+    await expect(
+      canvas.getByRole("heading", { name: /account settings/i }),
+    ).toBeVisible();
+  },
   parameters: {
     docs: {
       source: {
@@ -121,6 +133,11 @@ export const Default: Story = {
 export const WithRightAction: Story = {
   args: {
     withRightContent: true,
+  },
+  play: async ({ canvas }) => {
+    const buttons = canvas.getAllByRole("button");
+
+    await expect(buttons).toHaveLength(2);
   },
   parameters: {
     docs: {
@@ -142,6 +159,9 @@ export const WithoutReturn: Story = {
     returnPath: "",
     showReturn: false,
     title: "Profile",
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.queryByRole("button")).toBeNull();
   },
   parameters: {
     docs: {
@@ -165,6 +185,14 @@ export const TitleAsH1: Story = {
   args: {
     title: "Dashboard",
     titleHierarchy: "h1",
+  },
+  play: async ({ canvas }) => {
+    const heading = canvas.getByRole("heading", {
+      level: 1,
+      name: /dashboard/i,
+    });
+
+    await expect(heading).toBeVisible();
   },
   parameters: {
     docs: {

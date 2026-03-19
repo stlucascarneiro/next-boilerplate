@@ -1,6 +1,6 @@
 import Chip from "@/shared/Chip.client";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { fn } from "storybook/test";
+import { expect, fn } from "storybook/test";
 
 const meta = {
   args: {
@@ -79,6 +79,13 @@ export const Default: Story = {
   args: {
     children: "Chip text",
   },
+  play: async ({ canvas }) => {
+    const chipText = canvas.getByText(/chip text/i);
+    const chipElement = chipText.closest("div");
+
+    await expect(chipElement).not.toBeNull();
+    await expect(chipElement?.querySelector("svg")).toBeNull();
+  },
   parameters: {
     docs: {
       description: {
@@ -92,6 +99,16 @@ export const Clickable: Story = {
   args: {
     children: "Clickable chip",
     clickable: true,
+    onClick: fn(),
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const chipText = canvas.getByText(/clickable chip/i);
+    const chipElement = chipText.closest("div");
+
+    await expect(chipElement).not.toBeNull();
+    await expect(chipElement?.querySelector("svg")).not.toBeNull();
+    await userEvent.click(chipText);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
   parameters: {
     docs: {

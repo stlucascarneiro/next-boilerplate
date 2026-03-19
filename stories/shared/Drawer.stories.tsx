@@ -1,6 +1,7 @@
 import Drawer from "@/shared/Drawer.client";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { FiMenu } from "react-icons/fi";
+import { expect, waitFor } from "storybook/test";
 
 type DrawerStoryArgs = {
   placement?: "left" | "right";
@@ -91,6 +92,19 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {},
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /open drawer/i }));
+
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+    await expect(canvas.getByText(/drawer title/i)).toBeInTheDocument();
+
+    await userEvent.click(
+      canvas.getByRole("button", { name: /close drawer/i }),
+    );
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog")).toBeNull();
+    });
+  },
   parameters: {
     docs: {
       source: {
@@ -103,6 +117,16 @@ export const Default: Story = {
 export const LeftPlacement: Story = {
   args: {
     placement: "left",
+  },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /open drawer/i }));
+
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog")).toBeNull();
+    });
   },
   parameters: {
     docs: {

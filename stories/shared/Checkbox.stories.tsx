@@ -1,5 +1,6 @@
 import Checkbox from "@/shared/Checkbox";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { expect } from "storybook/test";
 
 type CheckboxStoryArgs = {
   className?: string;
@@ -96,6 +97,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const checkbox = canvas.getByRole("checkbox", {
+      name: /accept terms and conditions/i,
+    });
+
+    await expect(checkbox).not.toBeChecked();
+    await userEvent.click(checkbox);
+    await expect(checkbox).toBeChecked();
+  },
   parameters: {
     docs: {
       source: {
@@ -115,6 +125,15 @@ export const CheckedByDefault: Story = {
     defaultChecked: true,
     label: "Subscribe to product updates",
     name: "newsletter",
+  },
+  play: async ({ canvas, userEvent }) => {
+    const checkbox = canvas.getByRole("checkbox", {
+      name: /subscribe to product updates/i,
+    });
+
+    await expect(checkbox).toBeChecked();
+    await userEvent.click(checkbox);
+    await expect(checkbox).not.toBeChecked();
   },
   parameters: {
     docs: {
@@ -138,6 +157,13 @@ export const Required: Story = {
     label: "I agree with the privacy policy",
     name: "privacy-policy",
     required: true,
+  },
+  play: async ({ canvas }) => {
+    const checkbox = canvas.getByRole("checkbox", {
+      name: /i agree with the privacy policy/i,
+    });
+
+    await expect(checkbox).toBeRequired();
   },
   parameters: {
     docs: {

@@ -1,7 +1,7 @@
 import Button from "@/shared/Button.client";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { PiEyeDuotone } from "react-icons/pi";
-import { fn } from "storybook/test";
+import { expect, fn } from "storybook/test";
 import Input from "../../shared/Input.client";
 
 type InputStoryArgs = {
@@ -11,6 +11,9 @@ type InputStoryArgs = {
   label: string;
   limit?: number;
   name: string;
+  onBlur?: (value: string) => void;
+  onChange?: (value: string) => void;
+  onEnter?: () => void;
   placeholder: string;
   required?: boolean;
   showAsideContent?: boolean;
@@ -47,6 +50,9 @@ function getInputSource(args: InputStoryArgs) {
 function InputStoryExample({
   helperTextClassName,
   helperTextText,
+  onBlur,
+  onChange,
+  onEnter,
   showAsideContent,
   ...args
 }: InputStoryArgs) {
@@ -67,9 +73,9 @@ function InputStoryExample({
               }
             : undefined
         }
-        onBlur={fn()}
-        onChange={fn()}
-        onEnter={fn()}
+        onBlur={onBlur}
+        onChange={onChange}
+        onEnter={onEnter}
       />
     </div>
   );
@@ -82,6 +88,9 @@ const meta = {
     label: "Password",
     limit: 100,
     name: "password",
+    onBlur: fn(),
+    onChange: fn(),
+    onEnter: fn(),
     placeholder: "Enter your password",
     required: false,
     showAsideContent: false,
@@ -116,6 +125,21 @@ const meta = {
     name: {
       control: "text",
       description: "Input name and id used for forms and label association.",
+    },
+    onBlur: {
+      action: "blurred",
+      description:
+        "Callback fired with the current value when the input loses focus.",
+    },
+    onChange: {
+      action: "changed",
+      description:
+        "Callback fired with the current value whenever the input changes.",
+    },
+    onEnter: {
+      action: "pressed-enter",
+      description:
+        "Callback fired when Enter key is pressed while focused on input.",
     },
     placeholder: {
       control: "text",
@@ -164,6 +188,26 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  args: {
+    onBlur: fn(),
+    onChange: fn(),
+    onEnter: fn(),
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const input = canvas.getByLabelText(/password/i);
+
+    args.onChange?.mockClear();
+    args.onEnter?.mockClear();
+    args.onBlur?.mockClear();
+
+    await userEvent.type(input, "S3curePass");
+    await userEvent.keyboard("{Enter}");
+    await userEvent.tab();
+
+    await expect(args.onChange).toHaveBeenCalled();
+    await expect(args.onEnter).toHaveBeenCalledTimes(1);
+    await expect(args.onBlur).toHaveBeenCalled();
+  },
   parameters: {
     docs: {
       source: {
@@ -188,9 +232,20 @@ export const RequiredEmail: Story = {
     helperTextText: "We'll never share your email.",
     label: "Email",
     name: "email",
+    onBlur: fn(),
+    onChange: fn(),
+    onEnter: fn(),
     placeholder: "you@example.com",
     required: true,
     type: "email",
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const input = canvas.getByLabelText(/email/i);
+
+    await expect(input).toBeRequired();
+    args.onChange?.mockClear();
+    await userEvent.type(input, "hello@example.com");
+    await expect(args.onChange).toHaveBeenCalled();
   },
   parameters: {
     docs: {
@@ -216,9 +271,19 @@ export const WithAsideContent: Story = {
     helperTextText: "Username is used in your public profile URL.",
     label: "Username",
     name: "username",
+    onBlur: fn(),
+    onChange: fn(),
+    onEnter: fn(),
     placeholder: "your-handle",
     showAsideContent: true,
     type: "text",
+  },
+  play: async ({ canvas }) => {
+    const input = canvas.getByLabelText(/username/i);
+    const buttons = canvas.getAllByRole("button");
+
+    await expect(input).toBeVisible();
+    await expect(buttons).toHaveLength(1);
   },
   parameters: {
     docs: {
@@ -248,10 +313,19 @@ export const NumberInput: Story = {
     helperTextText: "Set your target budget in USD.",
     label: "Budget",
     name: "budget",
+    onBlur: fn(),
+    onChange: fn(),
+    onEnter: fn(),
     placeholder: "0.00",
     step: "0.01",
     type: "number",
     value: 120.5,
+  },
+  play: async ({ canvas }) => {
+    const input = canvas.getByLabelText(/budget/i);
+
+    await expect(input).toHaveValue(120.5);
+    await expect(input).toHaveAttribute("step", "0.01");
   },
   parameters: {
     docs: {

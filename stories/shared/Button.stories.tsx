@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { FiArrowRight, FiPlus, FiTrash2 } from "react-icons/fi";
 import { PiHouseDuotone, PiPlusBold, PiTrashDuotone } from "react-icons/pi";
-import { fn } from "storybook/test";
+import { expect, fn } from "storybook/test";
 import Button from "../../shared/Button.client";
 
 const iconOptions = {
@@ -90,11 +90,26 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {};
+export const Primary: Story = {
+  args: {
+    onClick: fn(),
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const button = canvas.getByRole("button", { name: /continue/i });
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
+  },
+};
 
 export const Secondary: Story = {
   args: {
+    onClick: fn(),
     variant: "secondary",
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const button = canvas.getByRole("button", { name: /continue/i });
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };
 
@@ -102,7 +117,13 @@ export const GhostWithIcon: Story = {
   args: {
     icon: <PiHouseDuotone />,
     iconPlacement: "right",
+    onClick: fn(),
     variant: "ghost",
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const button = canvas.getByRole("button", { name: /continue/i });
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };
 
@@ -110,7 +131,13 @@ export const Danger: Story = {
   args: {
     children: "Delete item",
     icon: <PiTrashDuotone />,
+    onClick: fn(),
     variant: "danger",
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const button = canvas.getByRole("button", { name: /delete item/i });
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };
 
@@ -119,13 +146,27 @@ export const Loading: Story = {
     children: "Saving",
     icon: <PiPlusBold />,
     loading: true,
+    onClick: fn(),
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const button = canvas.getByRole("button", { name: /saving/i });
+    await expect(button).toBeDisabled();
+    await userEvent.click(button);
+    await expect(args.onClick).not.toHaveBeenCalled();
   },
 };
 
 export const Disabled: Story = {
   args: {
     disabled: true,
+    onClick: fn(),
     variant: "secondary",
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const button = canvas.getByRole("button", { name: /continue/i });
+    await expect(button).toBeDisabled();
+    await userEvent.click(button);
+    await expect(args.onClick).not.toHaveBeenCalled();
   },
 };
 
@@ -133,6 +174,7 @@ export const IconOnly: Story = {
   args: {
     children: undefined,
     icon: <PiHouseDuotone />,
+    onClick: fn(),
   },
   parameters: {
     docs: {
@@ -141,5 +183,10 @@ export const IconOnly: Story = {
           "When no children are provided, the component automatically switches to the icon size.",
       },
     },
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    const button = canvas.getByRole("button");
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };

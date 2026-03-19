@@ -6,5 +6,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "tailwindCSS.classFunctions": ["cva", "cx"]
+  "tailwindCSS.classFunctions": ["cva", "cx"],
+  "chat.tools.terminal.autoApprove": {
+    "pnpm": true
+  }
 }

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { FiCode, FiLayers, FiMonitor, FiUser } from "react-icons/fi";
+import { expect } from "storybook/test";
 import Multiselect from "../../shared/Multiselect.client";
 
 const baseOptions = [
@@ -108,6 +109,23 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const searchInput = canvas.getByPlaceholderText(/procurar/i);
+    const hiddenInput = document.querySelector(
+      'input[name="skills"][type="hidden"]',
+    ) as HTMLInputElement | null;
+
+    await expect(canvas.getByText(/development/i)).toBeVisible();
+
+    await userEvent.click(searchInput);
+    await userEvent.click(canvas.getByText(/design/i));
+    await expect(hiddenInput).not.toBeNull();
+    await expect(hiddenInput).toHaveValue("development,design");
+
+    await userEvent.click(document.body);
+    await userEvent.click(canvas.getByText(/^Development$/i));
+    await expect(hiddenInput).toHaveValue("design");
+  },
   parameters: {
     docs: {
       source: {
@@ -125,6 +143,20 @@ export const WithSelectionLimit: Story = {
   args: {
     defaultSelected: ["design", "product"],
     maxSelection: 2,
+  },
+  play: async ({ canvas, userEvent }) => {
+    const searchInput = canvas.getByPlaceholderText(/procurar/i);
+    const hiddenInput = document.querySelector(
+      'input[name="skills"][type="hidden"]',
+    ) as HTMLInputElement | null;
+
+    await expect(canvas.getByText(/2 \/ 2/i)).toBeVisible();
+
+    await userEvent.click(searchInput);
+    await userEvent.click(canvas.getByText(/marketing/i));
+
+    await expect(hiddenInput).not.toBeNull();
+    await expect(hiddenInput).toHaveValue("design,product");
   },
   parameters: {
     docs: {
@@ -149,6 +181,16 @@ export const EmptyInitialSelection: Story = {
     defaultSelected: [],
     label: "Project tags",
     name: "projectTags",
+  },
+  play: async ({ canvas, userEvent }) => {
+    const searchInput = canvas.getByPlaceholderText(/procurar/i);
+
+    await userEvent.click(searchInput);
+    await userEvent.type(searchInput, "unknown-option");
+
+    await expect(
+      canvas.getByText(/nenhum resultado para "unknown-option"/i),
+    ).toBeVisible();
   },
   parameters: {
     docs: {

@@ -1,6 +1,7 @@
 import Tabs from "@/shared/Tabs.client";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useState } from "react";
+import { expect } from "storybook/test";
 
 function getDefaultSource() {
   return `
@@ -115,6 +116,24 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const accountTab = canvas.getByRole("tab", { name: /account/i });
+    const securityTab = canvas.getByRole("tab", { name: /security/i });
+
+    await expect(accountTab).toHaveAttribute("aria-selected", "true");
+    await expect(
+      canvas.getByText(/manage profile details, locale settings/i),
+    ).toBeVisible();
+
+    await userEvent.click(securityTab);
+
+    await expect(securityTab).toHaveAttribute("aria-selected", "true");
+    await expect(
+      canvas.getByText(
+        /rotate credentials, enforce two-factor authentication/i,
+      ),
+    ).toBeVisible();
+  },
   parameters: {
     docs: {
       source: {
@@ -125,6 +144,16 @@ export const Default: Story = {
 };
 
 export const Controlled: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const overviewTab = canvas.getByRole("tab", { name: /overview/i });
+
+    overviewTab.focus();
+    await userEvent.keyboard("{ArrowRight}");
+
+    const activityTab = canvas.getByRole("tab", { name: /activity/i });
+    await expect(activityTab).toHaveAttribute("aria-selected", "true");
+    await expect(canvas.getByText(/current tab: activity/i)).toBeVisible();
+  },
   parameters: {
     docs: {
       description: {

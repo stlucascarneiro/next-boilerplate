@@ -1,5 +1,6 @@
 import Dialog from "@/shared/Dialog.client";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { expect, waitFor } from "storybook/test";
 
 function getDefaultDialogSource() {
   return `
@@ -107,6 +108,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole("button", { name: /open dialog/i });
+
+    await userEvent.click(trigger);
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+    await expect(canvas.getByText(/edit profile/i)).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: /cancel/i }));
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog")).toBeNull();
+    });
+  },
   parameters: {
     docs: {
       description: {
@@ -121,6 +134,21 @@ export const Default: Story = {
 };
 
 export const Alert: Story = {
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(
+      canvas.getByRole("button", { name: /delete project/i }),
+    );
+
+    await expect(canvas.getByRole("dialog")).toBeInTheDocument();
+    await expect(
+      canvas.getByText(/delete this project\?/i),
+    ).toBeInTheDocument();
+
+    await userEvent.click(canvas.getByRole("button", { name: /^delete$/i }));
+    await waitFor(() => {
+      expect(canvas.queryByRole("dialog")).toBeNull();
+    });
+  },
   parameters: {
     docs: {
       description: {
@@ -148,6 +176,22 @@ export const Alert: Story = {
 };
 
 export const AsyncConfirm: Story = {
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(
+      canvas.getByRole("button", { name: /publish release/i }),
+    );
+
+    const confirmButton = canvas.getByRole("button", { name: /publish now/i });
+    await userEvent.click(confirmButton);
+
+    await expect(confirmButton).toBeDisabled();
+    await waitFor(
+      () => {
+        expect(canvas.queryByRole("dialog")).toBeNull();
+      },
+      { timeout: 3000 },
+    );
+  },
   parameters: {
     docs: {
       description: {
