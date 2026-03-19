@@ -8,6 +8,7 @@
   },
   "tailwindCSS.classFunctions": ["cva", "cx"],
   "chat.tools.terminal.autoApprove": {
-    "pnpm": true
+    "pnpm": true,
+    "ForEach-Object": true
   }
 }

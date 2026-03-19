@@ -1,0 +1,18 @@
+export const STATUS_CODES = {
+  CLIENT_ERROR: {
+    BAD_REQUEST: 400,
+    CONFLICT: 409,
+    FORBIDDEN: 403,
+    NOT_FOUND: 404,
+    UNAUTHORIZED: 401,
+  },
+  SERVER_ERROR: {
+    INTERNAL_SERVER_ERROR: 500,
+  },
+  SUCCESS: {
+    CREATED: 201,
+    NO_CONTENT: 204,
+    OK: 200,
+    RESET_CONTENT: 205,
+  },
+};

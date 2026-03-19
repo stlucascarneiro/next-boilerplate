@@ -9,7 +9,7 @@ import {
 import Button from "./Button.client";
 import { parseObjectToQueryParams } from "./services/utils";
 
-import { IPagination } from "@/shared/types/api.types";
+import { IPagination } from "@/shared/types/api.type";
 
 interface IPaginationProps extends IPagination {
   params: Record<string, boolean | number | string | undefined>;
