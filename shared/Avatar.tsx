@@ -117,7 +117,7 @@ function AvatarItem({
   );
 }
 
-export const Avatar = ({ className, items, size, spacing }: IAvatar) => {
+export default function Avatar({ className, items, size, spacing }: IAvatar) {
   const visibleItems = items.slice(0, MAX_VISIBLE_AVATARS);
   const remainingItems = items.length - MAX_VISIBLE_AVATARS;
 
@@ -147,4 +147,4 @@ export const Avatar = ({ className, items, size, spacing }: IAvatar) => {
       )}
     </div>
   );
-};
+}

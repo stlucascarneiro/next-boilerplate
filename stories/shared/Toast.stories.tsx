@@ -156,6 +156,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Interactive demo — click each button to fire the corresponding toast variant.",
+      },
+      source: {
+        code: getSetupSource("top-right"),
+      },
+    },
+  },
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole("button", { name: /^success$/i }));
 
@@ -169,30 +180,11 @@ export const Default: Story = {
       expect(canvas.queryByRole("alert")).toBeNull();
     });
   },
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Interactive demo — click each button to fire the corresponding toast variant.",
-      },
-      source: {
-        code: getSetupSource("top-right"),
-      },
-    },
-  },
 };
 
 export const BottomRight: Story = {
   args: {
     position: "bottom-right",
-  },
-  play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole("button", { name: /^error$/i }));
-
-    await expect(canvas.getByRole("alert")).toBeInTheDocument();
-    await expect(
-      canvas.getByText(/something went wrong\. please try again\./i),
-    ).toBeInTheDocument();
   },
   parameters: {
     docs: {
@@ -204,19 +196,19 @@ export const BottomRight: Story = {
       },
     },
   },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /^error$/i }));
+
+    await expect(canvas.getByRole("alert")).toBeInTheDocument();
+    await expect(
+      canvas.getByText(/something went wrong\. please try again\./i),
+    ).toBeInTheDocument();
+  },
 };
 
 export const BottomCenter: Story = {
   args: {
     position: "bottom-center",
-  },
-  play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole("button", { name: /^success$/i }));
-    await userEvent.click(canvas.getByRole("button", { name: /^info$/i }));
-    await userEvent.click(canvas.getByRole("button", { name: /^warning$/i }));
-    await userEvent.click(canvas.getByRole("button", { name: /^error$/i }));
-
-    await expect(canvas.getAllByRole("alert")).toHaveLength(3);
   },
   parameters: {
     docs: {
@@ -227,5 +219,13 @@ export const BottomCenter: Story = {
         code: getSetupSource("bottom-center"),
       },
     },
+  },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /^success$/i }));
+    await userEvent.click(canvas.getByRole("button", { name: /^info$/i }));
+    await userEvent.click(canvas.getByRole("button", { name: /^warning$/i }));
+    await userEvent.click(canvas.getByRole("button", { name: /^error$/i }));
+
+    await expect(canvas.getAllByRole("alert")).toHaveLength(3);
   },
 };

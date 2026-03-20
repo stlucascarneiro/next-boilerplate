@@ -33,7 +33,7 @@ interface IInput {
   value?: number | string;
 }
 
-const Input = ({
+export default function Input({
   asideContent,
   className,
   helperText,
@@ -48,7 +48,7 @@ const Input = ({
   step,
   type,
   value,
-}: IInput) => {
+}: IInput) {
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
       <label className="text-text font-medium" htmlFor={name}>
@@ -85,6 +85,4 @@ const Input = ({
       )}
     </div>
   );
-};
-
-export default Input;
+}

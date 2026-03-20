@@ -6,13 +6,13 @@ interface IInput {
   required?: boolean;
 }
 
-const Checkbox = ({
+export default function Checkbox({
   className,
   defaultChecked,
   label,
   name,
   required,
-}: IInput) => {
+}: IInput) {
   return (
     <div className={`mb-4 flex flex-col ${className}`}>
       <label htmlFor={name}>{label}</label>
@@ -30,6 +30,4 @@ const Checkbox = ({
       </div>
     </div>
   );
-};
-
-export default Checkbox;
+}

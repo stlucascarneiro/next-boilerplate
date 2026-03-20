@@ -46,6 +46,5 @@ export interface IPagination {
   previousPage: number;
   records: number;
   recordsOnPage: number;
-  recordsRange: string;
   totalPages: number;
 }

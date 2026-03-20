@@ -1,7 +1,7 @@
 import { COLORS } from "@/shared/constants/colors.data";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect } from "storybook/test";
-import { Avatar } from "../../shared/Avatar";
+import Avatar from "../../shared/Avatar";
 
 const avatarImage =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='24' fill='%23e2e8f0'/%3E%3Ccircle cx='24' cy='18' r='8' fill='%2364748b'/%3E%3Cpath d='M10%2040c2.8-6.7%208.2-10%2014-10s11.2%203.3%2014%2010' fill='%2364748b'/%3E%3C/svg%3E";

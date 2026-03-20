@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PiAlignLeftDuotone } from "react-icons/pi";
 
-import { Avatar } from "../../shared/Avatar";
+import Avatar from "../../shared/Avatar";
 
 import Logo from "./Logo";
 
