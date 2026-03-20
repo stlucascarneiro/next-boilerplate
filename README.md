@@ -283,6 +283,32 @@ Benefit:
 - Perfectionist rules enforce deterministic ordering (imports, unions, interfaces, objects, exports).
 - Prettier plugins organize imports and Tailwind classes.
 
+## AI Agent Development Workflow
+
+This boilerplate includes an AI-assisted workflow focused on page building with reusable UI components.
+
+### What was implemented
+
+- A custom page-focused agent: `.github/agents/page-builder.agent.md`
+- A reusable skill for component selection: `.github/skills/shared-components/SKILL.md`
+- Workspace instructions to reinforce reuse and conventions: `.github/copilot-instructions.md`
+
+### How it works
+
+1. Describe the page behavior in Copilot Chat.
+2. Use the `page-builder` agent for page tasks.
+3. The agent uses the shared-components skill to decide _which_ component should be used.
+4. For API details (props, variants, defaults), the agent must consult Storybook stories in `stories/shared/` as the single source of truth.
+5. The implementation follows project conventions (individual imports, token-based styling, component reuse first).
+
+### Why this helps
+
+- Less duplication: component purpose mapping is centralized and API docs are not repeated.
+- Better consistency: page implementations follow the same shared component patterns.
+- Faster delivery: the agent can pick components quickly and validate usage against stories.
+- Lower drift risk: Storybook remains the canonical reference for component API.
+- Easier onboarding: new contributors can follow one guided workflow for AI-assisted UI development.
+
 ## Quality and Testing Details
 
 Current tested domains:
