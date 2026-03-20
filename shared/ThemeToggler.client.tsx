@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { PiMoonDuotone, PiSunDuotone } from "react-icons/pi";
+import Button from "./Button.client";
 
 export default function ThemeToggler() {
   const { setTheme, systemTheme, theme } = useTheme();
@@ -12,9 +13,10 @@ export default function ThemeToggler() {
   };
 
   return (
-    <button onClick={toggleTheme}>
-      <PiMoonDuotone className="dark:hidden" />
-      <PiSunDuotone className="hidden dark:flex" />
-    </button>
+    <Button
+      icon={currentTheme === "light" ? <PiMoonDuotone /> : <PiSunDuotone />}
+      onClick={toggleTheme}
+      variant="ghost"
+    />
   );
 }

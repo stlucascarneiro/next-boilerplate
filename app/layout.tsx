@@ -1,3 +1,5 @@
+import MainContainer from "@/modules/layout/MainContainer";
+import Topbar from "@/modules/layout/Topbar.client";
 import ToastProvider from "@/shared/Toast.client";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
@@ -30,9 +32,14 @@ export default async function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body className="bg-background text-text antialiased">
+      <body className="bg-background text-text flex h-dvh w-full flex-col antialiased">
         <ThemeProvider attribute="class">
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <Topbar />
+            <div className="flex h-96 w-full grow">
+              <MainContainer>{children}</MainContainer>
+            </div>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
