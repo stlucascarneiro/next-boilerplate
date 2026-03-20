@@ -22,3 +22,9 @@ Apply this policy whenever implementing tests in this repository.
 - Prefer interaction tests with Storybook play functions for component behavior.
 - Validate outcomes that matter to users, not implementation details.
 - Reuse existing stories as test cases before creating new test-only scaffolding.
+
+## Commit message policy
+
+- Always write Git commit messages in English.
+- Use Conventional Commits format when possible (feat, fix, chore, docs, refactor, test).
+- Keep the subject concise and imperative.

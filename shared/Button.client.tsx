@@ -5,9 +5,7 @@ import { ReactNode } from "react";
 import Spinner from "./Spinner";
 
 const cvaButton = cva(
-  [
-    "text-strong duration-300 flex items-center gap-2 overflow-hidden font-semibold",
-  ],
+  ["text-strong duration-300 flex items-center overflow-hidden font-semibold"],
   {
     variants: {
       disabled: {
@@ -15,10 +13,11 @@ const cvaButton = cva(
         true: "cursor-not-allowed opacity-50",
       },
       size: {
-        icon: "p-2 text-lg",
-        lg: "px-5 py-2.5 text-base rounded-md",
-        md: "px-4 py-2 text-sm",
-        sm: "px-3 py-1.5 text-xs",
+        icon: "p-2 text-lg gap-2",
+        lg: "px-5 py-2.5 text-base rounded-md gap-2",
+        md: "px-4 py-2 text-sm gap-2",
+        sm: "px-3 py-1.5 text-xs gap-2",
+        unstyled: "",
       },
       variant: {
         danger: "bg-error hover:bg-error/80 text-white",

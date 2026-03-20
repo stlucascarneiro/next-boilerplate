@@ -1,4 +1,5 @@
 import MainContainer from "@/modules/layout/MainContainer";
+import Navbar from "@/modules/layout/Navbar.client";
 import Topbar from "@/modules/layout/Topbar.client";
 import ToastProvider from "@/shared/Toast.client";
 import type { Metadata } from "next";
@@ -37,6 +38,7 @@ export default async function RootLayout({
           <ToastProvider>
             <Topbar />
             <div className="flex h-96 w-full grow">
+              <Navbar />
               <MainContainer>{children}</MainContainer>
             </div>
           </ToastProvider>

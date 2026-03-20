@@ -11,7 +11,7 @@ const Logo = ({}: IProps) => {
     <div>
       <Image
         alt="Next.js Logo"
-        className="w-10"
+        className="w-14"
         height={106}
         src={logo}
         width={144}
