@@ -8,16 +8,20 @@ export interface IOption {
   value: TInputValue;
 }
 
+export interface IPageGroup {
+  id: string;
+  name: string;
+  pages: IPage[];
+}
+
 export interface IPage {
   active: boolean;
   dynamicPages?: string[];
   icon?: IconType;
   name: string;
   path: string;
-  protected: boolean;
   subpages?: {
     name: string;
     path: string;
   }[];
-  system: boolean;
 }

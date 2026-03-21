@@ -1,83 +1,107 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { PiGearSixDuotone } from "react-icons/pi";
 
+import Avatar from "@/shared/Avatar";
 import { capitalizeFirstLetter } from "@/shared/services/utils";
-import Button from "../../shared/Button.client";
-import { PAGES } from "../../shared/constants/pages.data";
-import Divider from "../../shared/Divider";
+import { IPageGroup } from "@/shared/types/components.type";
+import { PAGE_GROUPS } from "../../shared/constants/pages.data";
+import NavItemButton from "./NavItemButton.client";
 import { toggleNavbar } from "./services/toggleNavbar";
+
+const PageGroup = ({
+  pageGroup,
+  pathname,
+}: {
+  pageGroup: IPageGroup;
+  pathname: string;
+}) => {
+  const activePages = pageGroup.pages.filter((page) => page.active);
+
+  if (activePages.length === 0) return null;
+
+  return (
+    <section
+      aria-labelledby={`${pageGroup.id}-title`}
+      className="flex flex-col gap-2"
+    >
+      <h2
+        className="text-subtle px-1 text-xs font-semibold tracking-[0.5px] uppercase"
+        id={`${pageGroup.id}-title`}
+      >
+        {capitalizeFirstLetter(pageGroup.name)}
+      </h2>
+      <ul className="m-0 flex list-none flex-col gap-1 p-0">
+        {activePages.map((page) => {
+          const isActive = pathname === page.path;
+
+          return (
+            <li className="m-0" key={page.path}>
+              <NavItemButton
+                href={page.path}
+                icon={page.icon}
+                isActive={isActive}
+                label={capitalizeFirstLetter(page.name)}
+              />
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+};
 
 export default function Navbar() {
   const pathname = usePathname();
-  const main = pathname.split("/")[1];
-
-  const page = PAGES.find((page) => page.name === main);
-
-  if (!page || !page?.protected) return null;
 
   return (
     <>
       <button
+        aria-label="Close main menu"
         className="absolute hidden h-full w-full bg-black/5 md:hidden"
         id="overlay"
         onClick={toggleNavbar}
+        type="button"
       />
-      <nav
-        className="border-border-surface bg-surface absolute z-10 flex h-full w-full max-w-13.5 -translate-x-16 flex-col gap-3 border-r p-2 pt-4 delay-75 duration-300 hover:max-w-60 md:static md:translate-x-0"
+      <aside
+        className="border-border-surface bg-surface absolute z-10 flex h-full w-full max-w-60 -translate-x-60 flex-col border-r delay-75 duration-300 md:static md:translate-x-0"
         id="navbar"
       >
-        {PAGES.map((pg, index) => {
-          const Icon = pg.icon;
-          const selected = main === pg.name;
+        <nav
+          aria-label="Main navigation"
+          className="flex flex-1 flex-col gap-6 px-4 py-5"
+        >
+          {PAGE_GROUPS.map((pageGroup) => (
+            <PageGroup
+              key={pageGroup.id}
+              pageGroup={pageGroup}
+              pathname={pathname}
+            />
+          ))}
+        </nav>
 
-          if (!pg.protected || !pg.active || pg.system) return null;
+        <footer className="border-border-surface flex flex-col gap-3 border-t px-4 py-4">
+          <NavItemButton
+            href="/settings"
+            icon={PiGearSixDuotone}
+            isActive={pathname === "/settings"}
+            label="Settings"
+          />
 
-          return (
-            <Link
-              className="w-full overflow-hidden rounded-sm"
-              href={pg.path}
-              key={index}
-            >
-              <Button
-                className="gap-2.5 px-2.5 py-2 text-sm"
-                icon={!!Icon && <Icon className="text-lg" />}
-                size="unstyled"
-                variant={selected ? "primary" : "ghost"}
-                width="full"
-              >
-                {capitalizeFirstLetter(pg.name)}
-              </Button>
-            </Link>
-          );
-        })}
-        <Divider />
-        {PAGES.map((pg, index) => {
-          const Icon = pg.icon;
-
-          if (!pg.active || !pg.system) return null;
-
-          return (
-            <Link className="w-full overflow-hidden" href={pg.path} key={index}>
-              <Button
-                className="gap-2.5 px-2.5 py-2 text-sm"
-                icon={!!Icon && <Icon className="text-lg" />}
-                size="unstyled"
-                variant={
-                  pathname === pg.path ||
-                  pg.subpages?.some((sp) => sp.path === pathname)
-                    ? "primary"
-                    : "ghost"
-                }
-                width="full"
-              >
-                {capitalizeFirstLetter(pg.name)}
-              </Button>
-            </Link>
-          );
-        })}
-      </nav>
+          <div className="border-border-surface flex items-center gap-3 rounded-lg border px-2 py-2">
+            <Avatar items={[{ name: "User Name" }]} />
+            <div className="min-w-0">
+              <p className="text-strong mb-0 truncate text-xs font-semibold">
+                User Name
+              </p>
+              <p className="text-subtle mb-0 truncate text-xs">
+                user.name@example.com
+              </p>
+            </div>
+          </div>
+        </footer>
+      </aside>
     </>
   );
 }

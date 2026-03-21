@@ -33,11 +33,11 @@ export default async function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body className="bg-background text-text flex h-dvh w-full flex-col antialiased">
+      <body className="bg-background text-text flex h-dvh w-full flex-col overflow-hidden antialiased">
         <ThemeProvider attribute="class">
           <ToastProvider>
             <Topbar />
-            <div className="flex h-96 w-full grow">
+            <div className="relative flex h-96 w-full grow">
               <Navbar />
               <MainContainer>{children}</MainContainer>
             </div>

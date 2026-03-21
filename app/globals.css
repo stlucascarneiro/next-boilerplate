@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --primary: #1775a9;
+  --primary: #3b82f6;
   --primary-contrast: #fff;
   --background: #f3f4f6;
   --surface: #fff;
@@ -48,16 +48,16 @@
 }
 
 .dark {
-  --background: #0d0e12;
-  --surface: #111217;
-  --input: #1f212a;
-  --text: #9a9cae;
+  --background: #121212;
+  --surface: #1a1a1a;
+  --input: #1a1a1a;
+  --text: #9ca3af;
   --strong: #ffffff;
   --subtle: #636674;
   --muted: #535d6a;
   --border: #323545;
-  --border-surface: #1b1c22;
-  --border-input: #363843;
+  --border-surface: #2e2e2e;
+  --border-input: #2e2e2e;
 }
 
 @layer base {
