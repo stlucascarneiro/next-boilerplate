@@ -20,7 +20,8 @@ interface IInput {
     className: string;
     text: string;
   };
-  label: string;
+  icon?: ReactNode;
+  label?: string;
   limit?: number;
   name: string;
   onBlur?: (value: string) => void;
@@ -37,6 +38,7 @@ export default function Input({
   asideContent,
   className,
   helperText,
+  icon,
   label,
   limit,
   name,
@@ -51,17 +53,19 @@ export default function Input({
 }: IInput) {
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
-      <label className="text-text font-medium" htmlFor={name}>
-        {label}
-      </label>
+      {label && (
+        <label className="text-strong text-sm font-medium" htmlFor={name}>
+          {label}
+          <span className="text-error ml-1">*</span>
+        </label>
+      )}
       <div
-        className="border-border-input bg-input flex items-center rounded-md border"
+        className="border-border-input bg-input relative flex items-center rounded-md border"
         suppressHydrationWarning
       >
+        {icon && <i className="absolute left-3">{icon}</i>}
         <input
-          className={
-            "text-text placeholder:text-subtle focus-visible:outline-primary h-full min-h-8 w-full rounded-md border-none pl-3 outline-transparent duration-200 focus-visible:outline-dashed"
-          }
+          className={`text-text placeholder:text-subtle focus-visible:outline-primary h-full min-h-10 w-full rounded-md border-none outline-transparent duration-200 placeholder:font-normal focus-visible:shadow-[0_2px_10px_2px_var(--color-primary)]/40 focus-visible:outline-1 ${icon ? "pl-9" : "pl-3"}`}
           id={name}
           maxLength={limit ?? 100}
           name={name}

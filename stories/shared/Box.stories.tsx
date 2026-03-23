@@ -1,51 +1,34 @@
 import Box from "@/shared/Box";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-type BoxStoryArgs = {
-  gap?: 0 | 1 | 2 | 3 | 4 | 6 | 8;
-  layout?: "col" | "none" | "row";
-  padding?: "lg" | "md" | "none" | "sm";
-  shadow?: "lg" | "md" | "none" | "sm";
-};
-
 const meta = {
   args: {
-    gap: 4,
-    layout: "col",
-    padding: "md",
-    shadow: "md",
+    hoverable: false,
+    size: "md",
+    variant: "default",
   },
   argTypes: {
-    gap: {
-      control: { type: "inline-radio" },
-      description: "Space between children when a flex layout is applied.",
-      options: [0, 1, 2, 3, 4, 6, 8],
+    hoverable: {
+      control: "boolean",
+      description: "Enables a subtle lift and border emphasis on hover.",
       table: {
-        defaultValue: { summary: "4" },
+        defaultValue: { summary: "false" },
       },
     },
-    layout: {
+    size: {
       control: { type: "inline-radio" },
-      description: "Layout mode used to arrange children.",
-      options: ["col", "row", "none"],
-      table: {
-        defaultValue: { summary: "col" },
-      },
-    },
-    padding: {
-      control: { type: "inline-radio" },
-      description: "Internal spacing applied to the container.",
-      options: ["none", "sm", "md", "lg"],
+      description: "Controls internal spacing and corner radius.",
+      options: ["sm", "md", "lg", "unstyled"],
       table: {
         defaultValue: { summary: "md" },
       },
     },
-    shadow: {
+    variant: {
       control: { type: "inline-radio" },
-      description: "Shadow intensity applied to the container.",
-      options: ["none", "sm", "md", "lg"],
+      description: "Visual style of the surface.",
+      options: ["default", "inverted"],
       table: {
-        defaultValue: { summary: "md" },
+        defaultValue: { summary: "default" },
       },
     },
   },
@@ -54,18 +37,17 @@ const meta = {
     docs: {
       description: {
         component:
-          "Reusable surface container with layout, spacing, and elevation variants for composing UI sections.",
+          "Reusable surface/card container with style, size, and optional hover emphasis variants.",
       },
     },
     layout: "centered",
   },
-  render: ({ gap, layout, padding, shadow }) => (
+  render: ({ hoverable, size, variant }) => (
     <Box
-      className="text-text w-85"
-      gap={gap}
-      layout={layout}
-      padding={padding}
-      shadow={shadow}
+      className="text-text flex w-85 flex-col gap-3"
+      hoverable={hoverable}
+      size={size}
+      variant={variant}
     >
       <div className="bg-primary/10 text-strong rounded-sm px-3 py-2 text-sm font-medium">
         Header
@@ -80,7 +62,7 @@ const meta = {
   ),
   tags: ["autodocs"],
   title: "Shared/Box",
-} satisfies Meta<BoxStoryArgs>;
+} satisfies Meta<typeof Box>;
 
 export default meta;
 
@@ -91,34 +73,48 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Default stacked container with medium padding and shadow.",
+        story: "Default surface with medium spacing and elevation.",
       },
     },
   },
 };
 
-export const RowLayout: Story = {
+export const Inverted: Story = {
   args: {
-    layout: "row",
+    variant: "inverted",
   },
   parameters: {
     docs: {
       description: {
-        story: "Horizontal arrangement for compact grouped content.",
+        story: "Alternative lower-emphasis surface style.",
       },
     },
   },
 };
 
-export const FlatContainer: Story = {
+export const Hoverable: Story = {
   args: {
-    padding: "sm",
-    shadow: "none",
+    hoverable: true,
+    size: "lg",
   },
   parameters: {
     docs: {
       description: {
-        story: "Low-emphasis container with minimal spacing and no shadow.",
+        story: "Interactive surface with hover feedback for clickable cards.",
+      },
+    },
+  },
+};
+
+export const Unstyled: Story = {
+  args: {
+    size: "unstyled",
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Removes spacing and radius styles, useful for fully custom compositions.",
       },
     },
   },
